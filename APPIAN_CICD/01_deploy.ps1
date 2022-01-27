@@ -30,17 +30,17 @@ $result=""
 # keep on checking inspection result status
 while($continueLoop){
 
+    echo "Inspection started..."
+
     Start-Sleep -s 3
 
     $tryCount= $tryCount+1
    
 
-
-    echo $tryCount
-
     $inspectStatusResponseRaw = ./getInspectionStatus.bat $inspectResponse.uuid $targetEnvDetails.baseUrl  $targetEnvDetails.apiKey
     $inspectStatusResponse=$inspectStatusResponseRaw | ConvertFrom-Json
    
+    echo "Inspection in progress..."
 
     $continueLoop = if (($tryCount -gt 120) -or ($inspectStatusResponse.status -eq "COMPLETED") -or($inspectStatusResponse.status -eq "FAILED")) { 0 } else { 1 }
   
@@ -53,6 +53,9 @@ while($continueLoop){
 # Deploy package if inspection result is successfull 
 if($inspectStatusResponse.status -eq "COMPLETED")
 { 
+
+        echo "Inspection completed..."
+        echo "Import started..."
 
         $deployResponseRaw=.\deploy.bat $projectHome $targetEnvDetails.baseUrl  $targetEnvDetails.apiKey
         $deployResponse=$deployResponseRaw | ConvertFrom-Json
@@ -74,16 +77,17 @@ if($inspectStatusResponse.status -eq "COMPLETED")
    
 
 
-            echo $tryCount
-
             $deployStatusResponseRaw = ./getDeploymentStatus.bat $deployResponse.uuid $targetEnvDetails.baseUrl  $targetEnvDetails.apiKey
             $deployStatusResponse=$deployStatusResponseRaw | ConvertFrom-Json
 
+            echo "Import in progress..."
 
             $continueLoop = if (($tryCount -gt 120) -or ($deployStatusResponse.status -eq "COMPLETED")) { 0 } else { 1 }
 
 
         }
+
+        if($deployStatusResponse.status -eq "COMPLETED"){ echo "Import completed..."} else { echo "Import failed..."}
 
 }
 
