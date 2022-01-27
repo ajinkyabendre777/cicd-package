@@ -1,0 +1,31 @@
+pipeline {
+agent any
+    stages {
+        stage('Checkout') {
+            steps {
+			
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6fccab87-6aec-4fab-a189-ed26a3466f47', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
+				
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6fccab87-6aec-4fab-a189-ed26a3466f47', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
+				
+
+            }
+        }
+		
+		stage(Test) {
+			steps {
+			withMaven(maven: 'MAVEN_HOME') { 
+			  bat "CD test"
+			  bat "mvn clean install"
+			 }
+			}
+		
+		}
+		
+	
+	
+    }
+}
+
+
+
