@@ -1,0 +1,23 @@
+{  
+ "applications":[
+      {
+         "appCode":"EOS",
+         "devEnv":"DEV1",
+         "sitEnv":"SIT1",
+         "prodEnv":"PROD1"
+      }
+   ],
+   "environments":[
+      {
+         "envCode":"DEV1",
+         "baseUrl":"https://gfeu-l01.appiancloud.com/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyY2MwZWU2MC05NGFkLTQzOWItYTk5Ny0xOWJjNTZlYmU4OWMifQ.QWKoyAh_15JDcsf5iVSDfxrnIJkgrcb2V_mE5IoveKw"
+      },
+      {
+         "envCode":"SIT1",
+         "baseUrl":"https://gfeu-m02.appiancloud.com/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkOTU1Zjc2NS0xOTc5LTQ0MjAtODMzNC0yZjQzYzk0M2M4ODgifQ.Hb_GBxn-sMVv6xEJfUDVtW-eHcGM6SUzgdwX4GkcRUw"
+      }
+   ]
+}
+
