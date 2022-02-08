@@ -1,6 +1,6 @@
 
 
-$projectHome ="C:\GIT_REPO\coforge-cicd-package\APPIAN_CICD"
+$projectHome ="C:\Program Files (x86)\Jenkins\workspace\EOS"
 
 $appCode = $args[0]
 $jiraNumber = $args[1]
