@@ -1,12 +1,14 @@
 
 
-$projectHome ="C:\Program Files (x86)\Jenkins\workspace\EOS"
-
 $appCode = $args[0]
 $jiraNumber = $args[1]
 $targetEnv = $args[2]
  
+$projectHome ="C:\Program Files (x86)\Jenkins\workspace\"+$appCode
+$cicdPath = $projectHome+"\cicd\APPIAN_CICD"
+ 
 
+Set-Location -Path $cicdPath
 
 $applicationConfig = Get-Content -Raw -Path applicationConfig.json | ConvertFrom-Json
 $applicationData = $applicationConfig.applications | Where-Object -Property appCode -EQ $appCode
