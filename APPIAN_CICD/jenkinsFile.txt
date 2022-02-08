@@ -12,11 +12,20 @@ agent any
             }
         }
 		
+		 stage(DeployToTest) {
+			steps {
+			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS EOS-1 DEV"
+			}
+		
+		}
+		
+		
 		stage(Test) {
 			steps {
 			withMaven(maven: 'MAVEN_HOME') { 
-			  bat "CD test"
-			  bat "mvn clean install"
+			  bat "cd test"
+			  bat "dir"
+			  bat "mvn -f test/pom.xml clean install"
 			  cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
 			 }
 			}
@@ -27,7 +36,6 @@ agent any
 	
     }
 }
-
 
 
 
