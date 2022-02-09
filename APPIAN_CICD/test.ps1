@@ -5,5 +5,5 @@ $targetEnv = $args[2]
 $projectHome ="C:\ProgramData\Jenkins\.jenkins\workspace\EOS\test"
 
 Set-Location -Path $projectHome
-mvn clean install
+call mvn clean install
 
