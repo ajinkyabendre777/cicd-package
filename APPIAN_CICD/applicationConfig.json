@@ -4,7 +4,7 @@
          "appCode":"EOS",
          "devEnv":"DEV1",
          "sitEnv":"SIT1",
-		 "uatEnv":"UAT1"
+		 "uatEnv":"UAT1",
          "prodEnv":"PROD1"
       }
    ],

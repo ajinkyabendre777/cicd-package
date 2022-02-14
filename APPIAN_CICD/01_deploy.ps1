@@ -4,7 +4,7 @@ $appCode = $args[0]
 $jiraNumber = $args[1]
 $targetEnv = $args[2]
  
-$projectHome ="C:\Program Files (x86)\Jenkins\workspace\"+$appCode
+$projectHome ="C:\GIT_REPO\DEVOPS\"+$appCode
 $cicdPath = $projectHome+"\cicd\APPIAN_CICD"
  
 
@@ -13,15 +13,16 @@ Set-Location -Path $cicdPath
 $applicationConfig = Get-Content -Raw -Path applicationConfig.json | ConvertFrom-Json
 $applicationData = $applicationConfig.applications | Where-Object -Property appCode -EQ $appCode
 
-$taregetEnvCode = if($targetEnv -eq "DEV"){$applicationData.devEnv} elseif($targetEnv -eq "SIT"){$applicationData.sitEnv} elseif($targetEnv -eq "PROD"){$applicationData.prodEnv} else {"INVALID"}
+$taregetEnvCode = if($targetEnv -eq "DEV"){$applicationData.devEnv} elseif($targetEnv -eq "SIT"){$applicationData.sitEnv}  elseif($targetEnv -eq "UAT"){$applicationData.uatEnv} elseif($targetEnv -eq "PROD"){$applicationData.prodEnv} else {"INVALID"}
+
 $targetEnvDetails = $applicationConfig.environments | Where-Object -Property envCode -EQ $taregetEnvCode
 
-# Inspect package 
+echo $targetEnvDetails.baseUrl
 
 $inspectResponseRaw=.\inspect.bat $projectHome $targetEnvDetails.baseUrl  $targetEnvDetails.apiKey
 $inspectResponse=$inspectResponseRaw | ConvertFrom-Json
 
-
+echo $inspectResponse
 
 $tryCount = 0
 $continueLoop = 1
@@ -50,8 +51,7 @@ while($continueLoop){
 
 }
 
-
-
+ 
 # Deploy package if inspection result is successfull 
 if($inspectStatusResponse.status -eq "COMPLETED")
 { 
@@ -92,4 +92,5 @@ if($inspectStatusResponse.status -eq "COMPLETED")
         if($deployStatusResponse.status -eq "COMPLETED"){ echo "Import completed..."} else { echo "Import failed..."}
 
 }
+
 
