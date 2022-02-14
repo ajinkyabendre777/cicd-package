@@ -4,7 +4,7 @@ $appCode = $args[0]
 $jiraNumber = $args[1]
 $targetEnv = $args[2]
  
-$projectHome ="C:\GIT_REPO\DEVOPS\"+$appCode
+$projectHome ="C:\ProgramData\Jenkins\.jenkins\workspace\"+$appCode
 $cicdPath = $projectHome+"\cicd\APPIAN_CICD"
  
 
