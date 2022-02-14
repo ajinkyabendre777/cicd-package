@@ -4,19 +4,25 @@
          "appCode":"EOS",
          "devEnv":"DEV1",
          "sitEnv":"SIT1",
+		 "uatEnv":"UAT1"
          "prodEnv":"PROD1"
       }
    ],
    "environments":[
       {
          "envCode":"DEV1",
-         "baseUrl":"https://gfeu-l01.appiancloud.com/suite",
+         "baseUrl":"https://incessantdev.appiancloud.com/suite",
          "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyY2MwZWU2MC05NGFkLTQzOWItYTk5Ny0xOWJjNTZlYmU4OWMifQ.QWKoyAh_15JDcsf5iVSDfxrnIJkgrcb2V_mE5IoveKw"
       },
       {
          "envCode":"SIT1",
-         "baseUrl":"https://gfeu-m02.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJkOTU1Zjc2NS0xOTc5LTQ0MjAtODMzNC0yZjQzYzk0M2M4ODgifQ.Hb_GBxn-sMVv6xEJfUDVtW-eHcGM6SUzgdwX4GkcRUw"
+         "baseUrl":"https://incessantea.appiancloud.com/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OTFkNTQwOS1hOWE0LTRmNzQtYjVmOS1lMjE4MzI4ZTY0ZDcifQ.ZWMTtuzfA17arE9Tk_cIoOVtueWpsqGaapScFIKZcX0"
+      },
+	  {
+         "envCode":"UAT1",
+         "baseUrl":"https://incessantea.appiancloud.com/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OTFkNTQwOS1hOWE0LTRmNzQtYjVmOS1lMjE4MzI4ZTY0ZDcifQ.ZWMTtuzfA17arE9Tk_cIoOVtueWpsqGaapScFIKZcX0"
       }
    ]
 }

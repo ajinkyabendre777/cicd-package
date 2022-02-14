@@ -1,23 +1,24 @@
 pipeline {
 agent any
+
+tools {
+    jdk 'JAVA_HOME'
+  }
+
     stages {
         stage('Checkout') {
             steps {
-			
-				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6fccab87-6aec-4fab-a189-ed26a3466f47', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
+			   
+			     bat "echo **********Jira Number:${params.JIRA_NUMBER}*************"
 				
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '6fccab87-6aec-4fab-a189-ed26a3466f47', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '2bad97a7-5fd2-470d-a1f3-e136a542caf0', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
+				
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '2bad97a7-5fd2-470d-a1f3-e136a542caf0', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
 				
 
             }
         }
 		
-		 stage(DeployToTest) {
-			steps {
-			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS EOS-1 DEV"
-			}
-		
-		}
 		
 		
 		stage(Test) {
@@ -32,10 +33,22 @@ agent any
 		
 		}
 		
+		
+	    stage(DeployToTest) {
+			steps {
+			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS EOS-1 DEV"
+			}
+		
+		}
+		
+		
+	  
 	
 	
     }
 }
+
+
 
 
 
