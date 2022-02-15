@@ -12,7 +12,7 @@
       {
          "envCode":"DEV1",
          "baseUrl":"https://incessantdev.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyY2MwZWU2MC05NGFkLTQzOWItYTk5Ny0xOWJjNTZlYmU4OWMifQ.QWKoyAh_15JDcsf5iVSDfxrnIJkgrcb2V_mE5IoveKw"
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYjU5NTVhNC01MGQ3LTQ2OWItYmE2NC01YzYyZGM2Zjk4YWIifQ.QkcT4xB8IMrUmRUDyIek3rK-o_00SW76OVhuY8Owcoc"
       },
       {
          "envCode":"SIT1",
@@ -22,7 +22,7 @@
 	  {
          "envCode":"UAT1",
          "baseUrl":"https://incessantdev.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyY2MwZWU2MC05NGFkLTQzOWItYTk5Ny0xOWJjNTZlYmU4OWMifQ.QWKoyAh_15JDcsf5iVSDfxrnIJkgrcb2V_mE5IoveKw"
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYjU5NTVhNC01MGQ3LTQ2OWItYmE2NC01YzYyZGM2Zjk4YWIifQ.QkcT4xB8IMrUmRUDyIek3rK-o_00SW76OVhuY8Owcoc"
       }
    ]
 }
