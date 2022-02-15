@@ -1,25 +1,29 @@
+def transitionInput =
+							  [
+								  transition: [
+									  id: '31'
+								  ]
+							  ]
+def newIssue = [fields: [ project: 	 [key: 'EOB'],
+												 summary: 'BUG CREATED FROM JENKINS',
+												 description: 'Test scenario failed ${params.JIRA_NUMBER}',
+												 issuetype: [name: 'Bug']]]
 pipeline {
 agent any
-
 tools {
     jdk 'JAVA_HOME'
   }
-
     stages {
         stage('Checkout') {
             steps {
-			   
-			     bat "echo **********Jira Number:${params.JIRA_NUMBER}*************"
+			
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
 				
-				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '2bad97a7-5fd2-470d-a1f3-e136a542caf0', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
-				
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '2bad97a7-5fd2-470d-a1f3-e136a542caf0', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
 				
 
             }
-        }
-		
-		
+        }	
 		
 		stage(Test) {
 			steps {
@@ -27,30 +31,40 @@ tools {
 			  bat "cd test"
 			  bat "dir"
 			  bat "mvn -f test/pom.xml clean install"
-			  cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+			  
 			 }
 			}
+			post {
+                success {
+				    
+                    cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+					
+					withEnv(['JIRA_SITE=jira-site']) {		  
+
+							  jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInput
+							  
+							}
+                }
+				failure{
+				
+				    cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+					
+					withEnv(['JIRA_SITE=jira-site']) {
+								jiraNewIssue issue: newIssue							
+						}
+				}
 		
+			}	
+	
 		}
 		
 		
-	    stage(DeployToTest) {
+		stage(DeployToUAT) {
 			steps {
-			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS EOS-1 DEV"
+			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS ${params.JIRA_NUMBER} UAT"
 			}
 		
 		}
 		
-		
-	  
-	
-	
-    }
+	}
 }
-
-
-
-
-
-
-
