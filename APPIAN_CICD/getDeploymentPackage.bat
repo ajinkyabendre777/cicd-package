@@ -10,5 +10,6 @@ set header="Appian-API-Key: %apiKey%"
 
 CD %projectHome%/cicd/APPIAN_CICD/temp
 
-
+del APPIAN_PACKAGE.zip
+ 
 curl --location --request GET %url% --header %header% --output APPIAN_PACKAGE.zip
