@@ -21,8 +21,8 @@
       },
 	  {
          "envCode":"UAT1",
-         "baseUrl":"https://incessantea.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1OTFkNTQwOS1hOWE0LTRmNzQtYjVmOS1lMjE4MzI4ZTY0ZDcifQ.ZWMTtuzfA17arE9Tk_cIoOVtueWpsqGaapScFIKZcX0"
+         "baseUrl":"https://incessantdev.appiancloud.com/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyY2MwZWU2MC05NGFkLTQzOWItYTk5Ny0xOWJjNTZlYmU4OWMifQ.QWKoyAh_15JDcsf5iVSDfxrnIJkgrcb2V_mE5IoveKw"
       }
    ]
 }
