@@ -17,6 +17,9 @@ tools {
         stage('Checkout') {
             steps {
 			
+			     bat "echo ***************JIRA NUMBER:${params.JIRA_NUMBER}*********************"
+				 bat "echo ***************JIRA APPIAN_DEPLOYMENT_UUID:${params.APPIAN_DEPLOYMENT_UUID}*********************"
+				 
 				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
 				
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
@@ -39,11 +42,14 @@ tools {
 				    
                     cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
 					
+					
 					withEnv(['JIRA_SITE=jira-site']) {		  
 
 							  jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInput
 							  
 							}
+							
+					 powershell "cicd\\APPIAN_CICD\\downloadDeploymentPackage.ps1 EOS ${params.APPIAN_DEPLOYMENT_UUID}"
                 }
 				failure{
 				
