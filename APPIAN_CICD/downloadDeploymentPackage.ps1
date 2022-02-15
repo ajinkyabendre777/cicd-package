@@ -3,7 +3,7 @@ $appCode = $args[0]
 $deploymentUuid = $args[1]
 
  
-$projectHome ="C:\GIT_REPO\DEVOPS\"+$appCode
+$projectHome ="C:\ProgramData\Jenkins\.jenkins\workspace\"+$appCode
 $cicdPath = $projectHome+"\cicd\APPIAN_CICD"
 
  
