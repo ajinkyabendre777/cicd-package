@@ -21,8 +21,8 @@
       },
 	  {
          "envCode":"UAT1",
-         "baseUrl":"https://incessantdev.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiYjU5NTVhNC01MGQ3LTQ2OWItYmE2NC01YzYyZGM2Zjk4YWIifQ.QkcT4xB8IMrUmRUDyIek3rK-o_00SW76OVhuY8Owcoc"
+         "baseUrl":"http://ec2-3-20-116-68.us-east-2.compute.amazonaws.com:8080/suite",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0NjBjYjkzOS0yZmNlLTRiMzUtODNmNC0xNjk5ZjI1ZTdmOWQifQ.nzJTKxFCOVMOzx8xWtksastqs19vn7GegXlntfTOabk"
       }
    ]
 }
