@@ -1,76 +1,141 @@
-def transitionInput =
-							  [
-								  transition: [
-									  id: '31'
-								  ]
-							  ]
-def newIssue = [fields: [ project: 	 [key: 'EOB'],
-												 summary: 'BUG CREATED FROM JENKINS',
-												 description: 'Test scenario failed ${params.JIRA_NUMBER}',
-												 issuetype: [name: 'Bug']]]
+
+// Declare variable here
+
+//These variable are used for jira integration
+def transitionInputQAFails = [transition: [id: '21']]
+def transitionInputQAPass = [transition: [id: '31']]
+def transitionInputUATPass = [transition: [id: '51']]
+def transitionInputUATFails = [transition: [id: '41']]
+
+def newIssue = [fields: [project: [key: 'EOB'], summary: "Test scenario failed", description: "Test scenario failed ${params.JIRA_NUMBER}", issuetype: [name: 'Bug']]]
+
+
 pipeline {
-agent any
-tools {
-    jdk 'JAVA_HOME'
-  }
+
+    agent any
+
+    tools {
+        jdk 'JAVA_HOME'
+    }
+
+    // Checkout CICD software repositery and project test and database repositery
     stages {
         stage('Checkout') {
             steps {
-			
-			     bat "echo ***************JIRA NUMBER:${params.JIRA_NUMBER}*********************"
-				 bat "echo ***************JIRA APPIAN_DEPLOYMENT_UUID:${params.APPIAN_DEPLOYMENT_UUID}*********************"
-				 
-				checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]]) 
-				
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class:'RelativeTargetDirectory',relativeTargetDir:'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]]) 
-				
+
+                // Print jira number ande deployment ID for audit purpose
+                bat "echo ***************JIRA NUMBER:${params.JIRA_NUMBER}*********************"
+                bat "echo ***************JIRA APPIAN_DEPLOYMENT_UUID:${params.APPIAN_DEPLOYMENT_UUID}*********************"
+
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'cicd']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-cicd-package.git']]])
+
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'test']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '078a033c-83da-48a1-a078-6ab95f5ceac8', url: 'https://github.com/ajinkyabendre777/coforge-eos-acceptance-test.git']]])
+
 
             }
-        }	
-		
-		stage(Test) {
-			steps {
-			withMaven(maven: 'MAVEN_HOME') { 
-			  bat "cd test"
-			  bat "dir"
-			  bat "mvn -f test/pom.xml clean install"
-			  
-			 }
-			}
-			post {
-                success {
-				    
-                    cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
-					
-					
-					withEnv(['JIRA_SITE=jira-site']) {		  
+        }
 
-							  jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInput
-							  
-							}
-							
-					 powershell "cicd\\APPIAN_CICD\\downloadDeploymentPackage.ps1 EOS ${params.APPIAN_DEPLOYMENT_UUID}"
-                }
-				failure{
-				
-				    cucumber buildStatus: 'null', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumber.json', pendingStepsNumber: -1, skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+        // Perform system integration testing
+        stage(Test) {
+            steps {
+                withMaven(maven: 'MAVEN_HOME') {
+                    bat "cd test"
+                    bat "dir"
+                    bat "mvn -f test/pom.xml test -Dcucumber.options=\"--tags \'@${params.JIRA_NUMBER} or @SanityOnSitEnvironment\'\""
 					
-					withEnv(['JIRA_SITE=jira-site']) {
-								jiraNewIssue issue: newIssue							
-						}
-				}
-		
-			}	
-	
-		}
-		
-		
-		stage(DeployToUAT) {
-			steps {
-			  powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS ${params.JIRA_NUMBER} UAT"
-			}
-		
-		}
-		
-	}
+					bat "if exist test\\target\\cucumberSanityOnSITEnvironment.json del test\\target\\cucumberSanityOnSITEnvironment.json"
+					bat "rename test\\target\\cucumber.json cucumberSanityOnSITEnvironment.json"
+					
+
+                }
+            }
+            post {
+                // upon successful completion of test generate cucumber report and update jira ticket status
+                success {
+
+                    cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumberSanityOnSITEnvironment.json', pendingStepsNumber: -1, reportTitle: 'SIT Test Report', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+
+                    withEnv(['JIRA_SITE=jira-site']) {
+
+                        jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInputQAPass
+
+                    }
+
+                    powershell "cicd\\APPIAN_CICD\\downloadDeploymentPackage.ps1 EOS ${params.APPIAN_DEPLOYMENT_UUID}"
+                }
+
+                // If test case fails generate cucumber report and update jira status
+                failure {
+
+                    cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumberSanityOnSITEnvironment.json', pendingStepsNumber: -1, reportTitle: 'SIT Test Report', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+                    withEnv(['JIRA_SITE=jira-site']) {
+                        jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInputQAFails
+                        jiraNewIssue issue: newIssue
+                    }
+                }
+
+            }
+
+        }
+
+        // Step to deploy on build on UAT environment
+        stage(DeployToUAT) {
+            steps {
+                powershell "cicd\\APPIAN_CICD\\01_deploy.ps1 EOS ${params.JIRA_NUMBER} UAT"
+            }
+            post {
+                // If deployment fails update jira status
+                failure {
+                    withEnv(['JIRA_SITE=jira-site']) {
+                        jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInputUATFails
+                        jiraNewIssue issue: newIssue
+                    }
+                }
+            }
+        }
+
+        // Perform sanity testing on UAT after build deployment
+        stage(SanityOnUAT) {
+            steps {
+                withMaven(maven: 'MAVEN_HOME') {
+                    bat "cd test"
+                    bat "dir"
+                    bat "mvn -f test/pom.xml test \"-Dcucumber.options=--tags @SanityOnUATEnvironment\""
+					
+					bat "if exist test\\target\\cucumberSanityOnUATEnvironment.json del test\\target\\cucumberSanityOnUATEnvironment.json"
+					bat "rename test\\target\\cucumber.json cucumberSanityOnUATEnvironment.json"
+
+                }
+            }
+
+            post {
+
+                // Upon successful sanity completion generate cucumber report and update jira status
+                success {
+                    cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumberSanityOnUATEnvironment.json', pendingStepsNumber: -1, reportTitle: 'UAT Test Report', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+                    withEnv(['JIRA_SITE=jira-site']) {
+                        jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInputUATPass
+                    }
+
+                }
+
+                // If test case fails generate cucumber report and update jira status
+                failure {
+
+                    cucumber buildStatus: 'null', customCssFiles: '', customJsFiles: '', failedFeaturesNumber: -1, failedScenariosNumber: -1, failedStepsNumber: -1, fileIncludePattern: '**/cucumberSanityOnUATEnvironment.json', pendingStepsNumber: -1, reportTitle: 'UAT Test Report', skippedStepsNumber: -1, sortingMethod: 'ALPHABETICAL', undefinedStepsNumber: -1
+
+                    withEnv(['JIRA_SITE=jira-site']) {
+                        jiraTransitionIssue idOrKey: JIRA_NUMBER, input: transitionInputUATFails
+                        jiraNewIssue issue: newIssue
+                    }
+                }
+
+            }
+
+        }
+
+    }
 }
