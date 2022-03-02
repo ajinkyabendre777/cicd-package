@@ -17,14 +17,15 @@ $targetEnvDetails = $applicationConfig.environments | Where-Object -Property env
 
 echo $targetEnvDetails.baseUrl
 
-
+# Download appian package
 $downloadResponseRaw=.\getDeploymentPackage.bat $deploymentUuid $targetEnvDetails.baseUrl $targetEnvDetails.apiKey $projectHome
-
 echo $downloadResponseRaw
 
+# Download Database package
+$downloadDBResponseRaw=.\getDatabasePackage.bat $deploymentUuid $targetEnvDetails.baseUrl $targetEnvDetails.apiKey $projectHome
+echo $downloadDBResponseRaw
 
+ # Download Import customization file package
+$downloadICFResponseRaw=.\getImportCustomizationFile.bat $deploymentUuid $targetEnvDetails.baseUrl $targetEnvDetails.apiKey $projectHome $targetEnvDetails.username $targetEnvDetails.pass
 
-
- 
-
-
+echo $downloadICFResponseRaw

@@ -9,4 +9,10 @@ set header="Appian-API-Key: %apiKey%"
 
 CD %projectHome%/cicd/APPIAN_CICD/temp
 
-curl --location --request POST %url% --header %header%  --form "json={\"name\":\"EOS 1.0\",\"packageFileName\":\"APPIAN_PACKAGE.zip\",\"customizationFileName\":\"APPIAN_PROPERTIES_FILE.properties\"}" --form "zipFile=@\"APPIAN_PACKAGE.zip\"" --form "ICF=@\"APPIAN_PROPERTIES_FILE.properties\""
+curl --location --request POST %url% --header %header%  --form "json={\"name\":\"EOS 1.0\",\"packageFileName\":\"APPIAN_PACKAGE.zip\",\"customizationFileName\":\"APPIAN_PROPERTIES_FILE.properties\",\"dataSource\":\"jdbc/Appian\",\"databaseScripts\":[{\"fileName\":\"MASTER_DATABASE_SCRIPT.sql\",\"orderId\":\"1\"}]}" --form "zipFile=@\"APPIAN_PACKAGE.zip\"" --form "ICF=@\"APPIAN_PROPERTIES_FILE.properties\"" --form "DB=@\"MASTER_DATABASE_SCRIPT.sql\""
+
+
+
+
+
+
