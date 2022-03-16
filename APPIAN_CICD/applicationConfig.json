@@ -26,7 +26,7 @@
 	  {
          "envCode":"UAT1",
          "baseUrl":"https://incessantea.appiancloud.com/suite",
-         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNDAzMWVmYy03M2E4LTQ1OTctOTVhOC1hN2NkNWY3ZGNiMjcifQ.846C6WAbWggPdZSVc-0Lcy-4U6K10op4_32kafke1zg",
+         "apiKey":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyNDAzMWVmYy03M2E4LTQ1OTctOTVhOC1hN2NkNWY3ZGNiMjcifQ.846C6WAbWggPdZSVc-0Lcy-4U6K10op4_32kafke1zg"
       },
 	  {
          "envCode":"UAT2",
