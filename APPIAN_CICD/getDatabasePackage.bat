@@ -14,4 +14,5 @@ del MASTER_DATABASE_SCRIPT.sql
  
 curl --location --request GET %url% --header %header% --output MASTER_DATABASE_SCRIPT.sql
 
-
+echo. >>MASTER_DATABASE_SCRIPT.sql
+echo -- END OF FILE  >>MASTER_DATABASE_SCRIPT.sql

@@ -15,3 +15,6 @@ CD %projectHome%/cicd/APPIAN_CICD/temp
 del APPIAN_PROPERTIES_FILE.properties
  
 curl --location --request GET -u %username%:%pass% %url% --output APPIAN_PROPERTIES_FILE.properties
+
+echo. >>APPIAN_PROPERTIES_FILE.properties
+echo ## END OF FILE ## >>APPIAN_PROPERTIES_FILE.properties
